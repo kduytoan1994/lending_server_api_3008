@@ -313,13 +313,14 @@ module.exports = (app) => {
                             })
                         
                     })
+                    console.log('17')
                     Promise.all(promisess)
                         .then(() => {
                             console.log('13')
                             console.log('ddfdfdfd.', kq)
                             var response = new CommonResponse("success", "", kq)
                             console.log("response", response)
-                            if (kq.length == loans.length)
+                            // if (kq.length == loans.length)
                                 res.json(response)
                         })
                         .catch(err => {
