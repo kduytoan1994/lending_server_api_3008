@@ -314,8 +314,6 @@ module.exports = (app) => {
                     name: loanTemp.name,
                     address: loanTemp.address,
                     description: loanTemp.descriptions,
-                    description: loanTemp.descriptions,
-                    description: loanTemp.descriptions,
                     distanceCenter: loanTemp.distanceCenter,
                     distanceMainRoad: loanTemp.distanceMainRoad,
                     list_photos: loanTemp.photos,

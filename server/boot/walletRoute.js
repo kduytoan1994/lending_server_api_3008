@@ -244,16 +244,16 @@ module.exports = (app) => {
                                     let promi = []
                                     lends.forEach(lendItem => {
                                         var range = loanItem.range_time
-                                        console.log('range',range)
+                                        console.log('range', range)
                                         promi.push(Utils.getGoingLend(lendItem.id)
                                             .then(lendResult => {
                                                 console.log('lendResult', lendResult)
                                                 loanConverted = lendResult.loan,
-                                                total_loan_money += lendResult.total_lend_money;
+                                                    total_loan_money = parseFloat(((lendResult.total_lend_money * 1000000 + total_loan_money * 1000000) / 1000000).toFixed(2));
                                                 next_interest_date = lendResult.next_interest_date;
-                                                next_interest_money += lendResult.next_interest_money;
-                                                total_money_will_pay += lendResult.total_money_will_receive;
-                                                total_money_paid += lendResult.total_money_received;
+                                                next_interest_money = parseFloat(((lendResult.next_interest_money * 1000000 + next_interest_money * 1000000) / 1000000).toFixed(2));
+                                                total_money_will_pay = parseFloat(((lendResult.total_money_will_receive * 1000000 + total_money_will_pay * 1000000) / 1000000).toFixed(2));
+                                                total_money_paid = parseFloat(((lendResult.total_money_received * 1000000 + total_money_paid * 1000000) / 1000000).toFixed(2));
                                                 interests = parseFloat((100 * total_money_will_pay / range).toFixed(0))
                                                 listInterest = lendResult.listInterest
                                             })
@@ -282,7 +282,7 @@ module.exports = (app) => {
                                             kq.push(data);
                                         })
                                         .catch(err => {
-                                            var response = new CommonResponse("success", "", kq)
+                                            var response = new CommonResponse("fail", "", err)
                                             console.log("response", response)
                                             res.json(response)
                                         })
@@ -307,7 +307,8 @@ module.exports = (app) => {
                             console.log('ddfdfdfd.', kq)
                             var response = new CommonResponse("success", "", kq)
                             console.log("response", response)
-                            res.json(response)
+                            if (kq.length == loans.length)
+                                res.json(response)
                         })
                         .catch(err => {
                             console.log('errr3')

@@ -555,7 +555,7 @@ exports.getGoingLend = lendId =>
                 console.log('6')
                 // console.log('resultOngoing:', result)
                 interestTemp = result;
-                next_interest_money = parseFloat(((result.money * 1000000 + next_interest_money * 1000000) / 1000000).toFixed(2));;
+                next_interest_money = parseFloat(((result.money * 1000000 + next_interest_money * 1000000) / 1000000).toFixed(2));
                 next_interest_date = result.date;
                 return convertLoan(loanTemp.id)
             })
