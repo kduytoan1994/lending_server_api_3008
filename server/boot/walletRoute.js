@@ -238,10 +238,10 @@ module.exports = (app) => {
                 console.log('1')
                 if (loans != null && loans.length > 0) {
                     console.log('2')
-                    loans.forEach(loanItem => {
+                    var promisess = loans.map(loanItem => {
                         console.log('3')
                         var next_interest_money = 0, next_interest_date = '', total_loan_money, total_money_will_pay = 0, total_money_paid = 0, listInterest, loanConverted, interests = 0;
-                        promises2.push(lend.find({ where: { loanId: loan.id } })
+                        return lend.find({ where: { loanId: loan.id } })
                             .then(lends => {
                                 console.log('4')
                                 if (lends != null && lends.length > 0) {
@@ -251,12 +251,12 @@ module.exports = (app) => {
                                         console.log('6')
                                         var range = loanItem.range_time
                                         console.log('range', range)
-                                        promi.push(Utils.getGoingLend(lendItem.id)
+                                        return promi.push(Utils.getGoingLend(lendItem.id)
                                             .then(lendResult => {
                                                 console.log('7')
                                                 // console.log('lendResult', lendResult)
                                                 loanConverted = lendResult.loan,
-                                                total_loan_money = parseFloat(((lendResult.total_lend_money * 1000000 + total_loan_money * 1000000) / 1000000).toFixed(2));
+                                                    total_loan_money = parseFloat(((lendResult.total_lend_money * 1000000 + total_loan_money * 1000000) / 1000000).toFixed(2));
                                                 next_interest_date = lendResult.next_interest_date;
                                                 next_interest_money = parseFloat(((lendResult.next_interest_money * 1000000 + next_interest_money * 1000000) / 1000000).toFixed(2));
                                                 total_money_will_pay = parseFloat(((lendResult.total_money_will_receive * 1000000 + total_money_will_pay * 1000000) / 1000000).toFixed(2));
@@ -311,9 +311,9 @@ module.exports = (app) => {
                                 console.log("response", response)
                                 res.json(response)
                             })
-                        )
+                        
                     })
-                    Q.all(promises2)
+                    Promise.all(promisess)
                         .then(() => {
                             console.log('13')
                             console.log('ddfdfdfd.', kq)
