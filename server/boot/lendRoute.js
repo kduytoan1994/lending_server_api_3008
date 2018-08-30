@@ -123,6 +123,7 @@ module.exports = (app) => {
                         console.log('payload ', payLoad)
                         var html = swig.renderFile(path.join(__dirname, '..', 'mailTemplate', 'register_lend_success.ejs'), payLoad);
                         lend.sendEmail(investorTemp.email, html, "register lend success");
+                        lend.sendEmail(hostResult.agencyId, html, "register lend success")
                         var data;
                         if (isFull == true) {
                             //check update if loan full

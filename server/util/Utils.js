@@ -528,31 +528,31 @@ exports.getGoingLend = lendId =>
                 return interest.find({ where: { lendingId: lendId } })
             })
             .then(interests => {
-                console.log('2')
+                // console.log('2')
                 // console.log('interestsOnGoing:', interests)
                 listInterest = interests
                 return loan.findOne({ where: { id: lendTemp.loanId } })
             })
             .then(loan => {
-                console.log('3')
+                // console.log('3')
                 // console.log('loanOnGoing:', loan)
                 loanTemp = loan;
                 return getMoneyReceived(lendTemp.id)
             })
             .then(total => {
-                console.log('4')
+                // console.log('4')
                 // console.log('totalonGoing:', total)
                 total_money_received = total.total;
                 return getMoneyWillReceive(lendTemp.id)
             })
             .then(total => {
-                console.log('5')
+                // console.log('5')
                 // console.log('totalOngoing:', total)
                 total_money_will_receive = total.total;
                 return getInterestNearestOfLend(lendTemp.id);
             })
             .then(result => {
-                console.log('6')
+                // console.log('6')
                 // console.log('resultOngoing:', result)
                 interestTemp = result;
                 next_interest_money = parseFloat(((result.money * 1000000 + next_interest_money * 1000000) / 1000000).toFixed(2));
@@ -560,7 +560,7 @@ exports.getGoingLend = lendId =>
                 return convertLoan(loanTemp.id)
             })
             .then(result => {
-                console.log('7')
+                // console.log('7')
                 // console.log('resultOngoing2:', result)
                 resolve({
                     loan: result,

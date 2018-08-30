@@ -235,21 +235,28 @@ module.exports = (app) => {
             })
             .then(loans => {
                 var promises2 = [];
+                console.log('1')
                 if (loans != null && loans.length > 0) {
+                    console.log('2')
                     loans.forEach(loanItem => {
+                        console.log('3')
                         var next_interest_money = 0, next_interest_date = '', total_loan_money, total_money_will_pay = 0, total_money_paid = 0, listInterest, loanConverted, interests = 0;
                         promises2.push(lend.find({ where: { loanId: loan.id } })
                             .then(lends => {
+                                console.log('4')
                                 if (lends != null && lends.length > 0) {
+                                    console.log('5')
                                     let promi = []
                                     lends.forEach(lendItem => {
+                                        console.log('6')
                                         var range = loanItem.range_time
                                         console.log('range', range)
                                         promi.push(Utils.getGoingLend(lendItem.id)
                                             .then(lendResult => {
-                                                console.log('lendResult', lendResult)
+                                                console.log('7')
+                                                // console.log('lendResult', lendResult)
                                                 loanConverted = lendResult.loan,
-                                                    total_loan_money = parseFloat(((lendResult.total_lend_money * 1000000 + total_loan_money * 1000000) / 1000000).toFixed(2));
+                                                total_loan_money = parseFloat(((lendResult.total_lend_money * 1000000 + total_loan_money * 1000000) / 1000000).toFixed(2));
                                                 next_interest_date = lendResult.next_interest_date;
                                                 next_interest_money = parseFloat(((lendResult.next_interest_money * 1000000 + next_interest_money * 1000000) / 1000000).toFixed(2));
                                                 total_money_will_pay = parseFloat(((lendResult.total_money_will_receive * 1000000 + total_money_will_pay * 1000000) / 1000000).toFixed(2));
@@ -258,7 +265,7 @@ module.exports = (app) => {
                                                 listInterest = lendResult.listInterest
                                             })
                                             .catch(err => {
-                                                console.log('errr4')
+                                                console.log('8')
                                                 var response = new CommonResponse("fail", "", err)
                                                 console.log("response", response)
                                                 res.json(response)
@@ -267,6 +274,7 @@ module.exports = (app) => {
                                     })
                                     Q.all(promi)
                                         .then(() => {
+                                            console.log('9')
                                             var data = {
                                                 loan: loanConverted,
                                                 start_time: loanItem.start_time,
@@ -282,19 +290,22 @@ module.exports = (app) => {
                                             kq.push(data);
                                         })
                                         .catch(err => {
+                                            console.log('10')
                                             var response = new CommonResponse("err", "", err)
                                             console.log("response", response)
                                             res.json(response)
                                         })
                                 }
                                 else {
-                                    console.log('success2')
+                                    console.log('11')
+                                    // console.log('success2')
                                     var response = new CommonResponse("success", "", kq)
                                     console.log("response", response)
                                     res.json(response)
                                 }
                             })
                             .catch(err => {
+                                console.log('12')
                                 console.log('errr4')
                                 var response = new CommonResponse("fail", "", err)
                                 console.log("response", response)
@@ -304,6 +315,7 @@ module.exports = (app) => {
                     })
                     Q.all(promises2)
                         .then(() => {
+                            console.log('13')
                             console.log('ddfdfdfd.', kq)
                             var response = new CommonResponse("success", "", kq)
                             console.log("response", response)
@@ -311,12 +323,14 @@ module.exports = (app) => {
                                 res.json(response)
                         })
                         .catch(err => {
+                            console.log('14')
                             console.log('errr3')
                             var response = new CommonResponse("fail", "", err)
                             console.log("response", response)
                             res.json(response)
                         })
                 } else {
+                    console.log('15')
                     console.log('success2')
                     var response = new CommonResponse("success", "", kq)
                     console.log("response", response)
@@ -324,7 +338,8 @@ module.exports = (app) => {
                 }
             })
             .catch(err => {
-                console.log('errr3')
+                console.log('16')
+                // console.log('errr3')
                 var response = new CommonResponse("fail", "", err)
                 console.log("response", response)
                 res.json(response)
