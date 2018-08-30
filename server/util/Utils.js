@@ -569,6 +569,7 @@ exports.getGoingLend = lendId =>
                     start_time: lendTemp.start_time,
                     end_time: lendTemp.end_time,
                     total_money_will_receive: total_money_will_receive,
+                    total_money_received :total_money_received,
                     next_interest_money: next_interest_money,
                     next_interest_date: next_interest_date,
                     list_interest: listInterest
