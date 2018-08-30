@@ -282,7 +282,7 @@ module.exports = (app) => {
                                             kq.push(data);
                                         })
                                         .catch(err => {
-                                            var response = new CommonResponse("fail", "", err)
+                                            var response = new CommonResponse("err", "", err)
                                             console.log("response", response)
                                             res.json(response)
                                         })

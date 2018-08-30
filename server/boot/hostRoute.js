@@ -79,46 +79,45 @@ module.exports = (app) => {
     app.post('/api/host/getHost', (req, res) => {
         var hostId = req.body.id;
         var token = req.body.token;
-        var result;
+        var result, hostTemp;
+        let money = 0, next_day = 'NA', next_money = 0, number_registed = 0, number_current = 0, number_complete = 0, total_debt = 0;
         host.findOne({ where: { id: hostId } })
             .then(host => {
-                let money = 0, next_day = 'NA', next_money = 0, number_registed = 0, number_current = 0, number_complete = 0, total_debt = 0;
-                wallet.findOne({ where: { ownerId: host.id } })
-                    .then(wallet => {
-                        money = wallet.balance;
-                        return loan.find({ where: { hostId: hostId, status: 0 } })
-                    })
-                    .then(loanResult => {
-                        number_registed = loanResult.length;
-                        return loan.find({ where: { hostId: hostId, status: 2 } })
-                    })
-                    .then(loanResult => {
-                        number_complete = loanResult.length;
-                        return loan.find({ where: { hostId: hostId, status: 1 } })
-                    })
-                    .then(loan => {
-                        number_current = loan.length;
-                        total_debt = loan.amount;
-                        return interest.find({ where: { loanId: loan.id, status: 0 } })
-                    })
-                    .then(interests => {
-                        if (interests.length > 0) {
-                            next_day = interests[0].date;
-                            next_money = ((interests[0].money) / 100).toFixed(2)
-                        }
-                    })
-                    .catch(err => {
-                        var response = new CommonResponse("fail", "", err)
-                        console.log("response", response)
-                    })
+                hostTemp = host;
+                return wallet.findOne({ where: { ownerId: host.id } })
+            })
+            .then(wallet => {
+                money = wallet.balance;
+                return loan.find({ where: { hostId: hostId, status: 0 } })
+            })
+            .then(loanResult => {
+                number_registed = loanResult.length;
+                return loan.find({ where: { hostId: hostId, status: 2 } })
+            })
+            .then(loanResult => {
+                number_complete = loanResult.length;
+                return loan.find({ where: { hostId: hostId, status: 1 } })
+            })
+            .then(loans => {
+                number_current = loans.length;
+                loans.forEach(loanItem=>{
+                    total_debt = parseFloat(((loanItem.amount*1000000+total_debt*1000000)/1000000).toFixed(2));
+                })
+                return interest.find({ where: { loanId: loan.id, status: 0 } })
+            })
+            .then(interests => {
+                if (interests.length > 0) {
+                    next_day = interests[0].date;
+                    next_money = ((interests[0].money) / 100).toFixed(2)
+                }
                 result = {
-                    id: host.id,
-                    name: host.name,
-                    avatar: host.avatar,
-                    email: host.email,
+                    id: hostTemp.id,
+                    name: hostTemp.name,
+                    avatar: hostTemp.avatar,
+                    email: hostTemp.email,
                     available_money: money,
-                    phone_number: host.phoneNumber,
-                    address: host.address,
+                    phone_number: hostTemp.phoneNumber,
+                    address: hostTemp.address,
                     number_registered_loan: number_registed,
                     number_completed_loan: number_complete,
                     number_current_loan: number_current,
@@ -132,7 +131,6 @@ module.exports = (app) => {
             .catch(err => {
                 var response = new CommonResponse("fail", "", err)
                 console.log("response", response)
-                res.json(response)
             })
     })
 
@@ -168,7 +166,7 @@ module.exports = (app) => {
                         .then(loans => {
                             number_current = loans.length;
                             total_debt = 100;
-                           
+
                             result.push({
                                 id: host.id,
                                 name: host.name,
@@ -219,14 +217,14 @@ module.exports = (app) => {
         res.json(response)
     })
 
-    app.post('/gethost', (req,res)=>{
+    app.post('/gethost', (req, res) => {
         var email = req.body.email;
-        host.findOne({where : {email : email}})
-        .then(hostResult => {
-            res.json(hostResult)
-        })
-        .catch(err=>{
-            res.json(err)
-        })
+        host.findOne({ where: { email: email } })
+            .then(hostResult => {
+                res.json(hostResult)
+            })
+            .catch(err => {
+                res.json(err)
+            })
     })
 }
